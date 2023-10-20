@@ -6,6 +6,6 @@ result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subp
 
 # Check the return code to see if the command was successful
 if result.returncode == 0:
-    print("Output:\n",result.stdout)
+    print(f"Output:\n{result.stdout}")
 else:
-    print("Error:\n",result.stderr)
+    print(f"Error:\{nresult.stderr}")
