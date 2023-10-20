@@ -1,0 +1,16 @@
+D:\Github\LOLRAT\LOLRAT_C2\LOLRAT_C2\bin\Debug\net6.0-windows\LOLRAT_C2.exe
+D:\Github\LOLRAT\LOLRAT_C2\LOLRAT_C2\bin\Debug\net6.0-windows\LOLRAT_C2.deps.json
+D:\Github\LOLRAT\LOLRAT_C2\LOLRAT_C2\bin\Debug\net6.0-windows\LOLRAT_C2.runtimeconfig.json
+D:\Github\LOLRAT\LOLRAT_C2\LOLRAT_C2\bin\Debug\net6.0-windows\LOLRAT_C2.dll
+D:\Github\LOLRAT\LOLRAT_C2\LOLRAT_C2\bin\Debug\net6.0-windows\LOLRAT_C2.pdb
+D:\Github\LOLRAT\LOLRAT_C2\LOLRAT_C2\obj\Debug\net6.0-windows\LOLRAT_C2.Form1.resources
+D:\Github\LOLRAT\LOLRAT_C2\LOLRAT_C2\obj\Debug\net6.0-windows\LOLRAT_C2.csproj.GenerateResource.cache
+D:\Github\LOLRAT\LOLRAT_C2\LOLRAT_C2\obj\Debug\net6.0-windows\LOLRAT_C2.GeneratedMSBuildEditorConfig.editorconfig
+D:\Github\LOLRAT\LOLRAT_C2\LOLRAT_C2\obj\Debug\net6.0-windows\LOLRAT_C2.AssemblyInfoInputs.cache
+D:\Github\LOLRAT\LOLRAT_C2\LOLRAT_C2\obj\Debug\net6.0-windows\LOLRAT_C2.AssemblyInfo.cs
+D:\Github\LOLRAT\LOLRAT_C2\LOLRAT_C2\obj\Debug\net6.0-windows\LOLRAT_C2.csproj.CoreCompileInputs.cache
+D:\Github\LOLRAT\LOLRAT_C2\LOLRAT_C2\obj\Debug\net6.0-windows\LOLRAT_C2.dll
+D:\Github\LOLRAT\LOLRAT_C2\LOLRAT_C2\obj\Debug\net6.0-windows\refint\LOLRAT_C2.dll
+D:\Github\LOLRAT\LOLRAT_C2\LOLRAT_C2\obj\Debug\net6.0-windows\LOLRAT_C2.pdb
+D:\Github\LOLRAT\LOLRAT_C2\LOLRAT_C2\obj\Debug\net6.0-windows\LOLRAT_C2.genruntimeconfig.cache
+D:\Github\LOLRAT\LOLRAT_C2\LOLRAT_C2\obj\Debug\net6.0-windows\ref\LOLRAT_C2.dll
