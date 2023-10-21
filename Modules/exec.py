@@ -3,7 +3,7 @@ import sys
 
 # Check if a command argument is provided
 if len(sys.argv) != 2:
-    print("Usage: python script.py <command>")
+    print("Usage: python exec.py <command>")
     sys.exit(1)
 
 # Get the command from the command-line argument
