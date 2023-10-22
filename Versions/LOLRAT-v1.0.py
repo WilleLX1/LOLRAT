@@ -1,8 +1,4 @@
-import os
-import subprocess
-import sys
-import requests
-import socket
+import os, sys, socket, subprocess, requests
 
 NameOfModule = "exec"
 arguments = [""]

