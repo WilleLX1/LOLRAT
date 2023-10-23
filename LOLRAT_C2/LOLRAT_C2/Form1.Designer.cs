@@ -264,6 +264,7 @@
             btnListen.TabIndex = 9;
             btnListen.Text = "Listen";
             btnListen.UseVisualStyleBackColor = true;
+            btnListen.Click += btnListen_Click;
             // 
             // txtActivePort
             // 
