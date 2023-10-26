@@ -41,6 +41,7 @@
             txtTitleIP1 = new TextBox();
             txtTitlePort = new TextBox();
             gbClientPanel = new GroupBox();
+            pbSS = new PictureBox();
             txtOutput = new TextBox();
             btnSend = new Button();
             txtCommand = new TextBox();
@@ -51,6 +52,7 @@
             textBox2 = new TextBox();
             gbBuild.SuspendLayout();
             gbClientPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pbSS).BeginInit();
             gbConnection.SuspendLayout();
             SuspendLayout();
             // 
@@ -191,6 +193,7 @@
             // 
             // gbClientPanel
             // 
+            gbClientPanel.Controls.Add(pbSS);
             gbClientPanel.Controls.Add(txtOutput);
             gbClientPanel.Controls.Add(btnSend);
             gbClientPanel.Controls.Add(txtCommand);
@@ -204,13 +207,22 @@
             gbClientPanel.TabStop = false;
             gbClientPanel.Text = "Clients";
             // 
+            // pbSS
+            // 
+            pbSS.Location = new Point(281, 139);
+            pbSS.Name = "pbSS";
+            pbSS.Size = new Size(395, 259);
+            pbSS.SizeMode = PictureBoxSizeMode.Zoom;
+            pbSS.TabIndex = 3;
+            pbSS.TabStop = false;
+            // 
             // txtOutput
             // 
-            txtOutput.Location = new Point(31, 119);
+            txtOutput.Location = new Point(31, 145);
             txtOutput.Multiline = true;
             txtOutput.Name = "txtOutput";
             txtOutput.ScrollBars = ScrollBars.Horizontal;
-            txtOutput.Size = new Size(645, 277);
+            txtOutput.Size = new Size(244, 251);
             txtOutput.TabIndex = 4;
             // 
             // btnSend
@@ -238,7 +250,7 @@
             listBoxClients.Location = new Point(539, 28);
             listBoxClients.Margin = new Padding(3, 4, 3, 4);
             listBoxClients.Name = "listBoxClients";
-            listBoxClients.Size = new Size(137, 84);
+            listBoxClients.Size = new Size(137, 104);
             listBoxClients.TabIndex = 0;
             // 
             // gbConnection
@@ -301,6 +313,7 @@
             gbBuild.PerformLayout();
             gbClientPanel.ResumeLayout(false);
             gbClientPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pbSS).EndInit();
             gbConnection.ResumeLayout(false);
             gbConnection.PerformLayout();
             ResumeLayout(false);
@@ -329,5 +342,6 @@
         private TextBox txtCommand;
         private TextBox txtOutput;
         private Button btnSend;
+        private PictureBox pbSS;
     }
 }
