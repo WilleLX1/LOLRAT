@@ -33,7 +33,7 @@ def send_image(client_socket, image_stream):
     try:
         logger.info("Getting image size...")
         # Get the image size in bytes and convert it to a 4-byte packed format
-        image_size = struct.pack('!I', image_stream.tell())
+        image_size = struct.pack("!I", image_stream.tell())
         logger.info("Image size: %d", image_stream.tell())
 
         logger.info("Sending image size to the receiver...")
