@@ -108,7 +108,6 @@ namespace LOLRAT_C2
 
         private void btnListen_Click(object sender, EventArgs e)
         {
-            ListenForConnectionsSS();
             if (!isListening)
             {
                 ListenForClients();
