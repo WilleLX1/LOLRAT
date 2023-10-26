@@ -1,4 +1,4 @@
-python -c 'import socket
+python -c "import socket
 import pyautogui
 from PIL import ImageGrab
 import io
@@ -19,14 +19,14 @@ def create_image_stream(screenshot):
     image_stream = io.BytesIO()  # Create a bytes buffer to hold the screenshot
 
     # Save the screenshot to the bytes buffer in JPEG format
-    screenshot.save(image_stream, format="JPEG")
+    screenshot.save(image_stream, format='JPEG')
 
     return image_stream
 
 def send_image(client_socket, image_stream):
     try:
         # Get the image size in bytes and convert it to a 4-byte packed format
-        image_size = struct.pack("!I", image_stream.tell())
+        image_size = struct.pack('!I', image_stream.tell())
 
         # Send the image size to the receiver
         client_socket.sendall(image_size)
@@ -36,7 +36,7 @@ def send_image(client_socket, image_stream):
 
         client_socket.sendall(image_stream.read())
     except Exception as e:
-        logger.error("Error sending screenshot: %s", str(e))
+        logger.error('Error sending screenshot: %s', str(e))
 
 def main(host, port):
     while True:
@@ -52,19 +52,19 @@ def main(host, port):
             image_stream = create_image_stream(screenshot)
             send_image(client_socket, image_stream)
         except ConnectionRefusedError:
-            logger.error("Connection to the receiver failed. Make sure the receiver is listening.")
+            logger.error('Connection to the receiver failed. Make sure the receiver is listening.')
         except socket.gaierror:
-            logger.error("Error resolving host: %s", host)
+            logger.error('Error resolving host: %s', host)
         finally:
             client_socket.close()
         time.sleep(2)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     if len(sys.argv) != 3:
-        print("Usage: python your_script.py <host> <port>")
+        print('Usage: python your_script.py <host> <port>')
         sys.exit(1)
 
     host = sys.argv[1]
     port = int(sys.argv[2])
 
-    main(host, port)'
+    main(host, port)"
