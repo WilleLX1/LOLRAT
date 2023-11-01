@@ -50,6 +50,7 @@
             btnShowTerminal = new Button();
             btnShowDebug = new Button();
             btnShowClients = new Button();
+            btnWebcam = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvClients).BeginInit();
             gbFC2.SuspendLayout();
             gbTopBar.SuspendLayout();
@@ -261,6 +262,7 @@
             // 
             // gbLeftBar
             // 
+            gbLeftBar.Controls.Add(btnWebcam);
             gbLeftBar.Controls.Add(btnShowTerminal);
             gbLeftBar.Controls.Add(btnShowDebug);
             gbLeftBar.Controls.Add(btnSS);
@@ -304,6 +306,16 @@
             btnShowClients.Text = "Clients";
             btnShowClients.UseVisualStyleBackColor = true;
             btnShowClients.Click += btnShowClients_Click;
+            // 
+            // btnWebcam
+            // 
+            btnWebcam.Location = new Point(12, 169);
+            btnWebcam.Name = "btnWebcam";
+            btnWebcam.Size = new Size(126, 29);
+            btnWebcam.TabIndex = 10;
+            btnWebcam.Text = "Webcam";
+            btnWebcam.UseVisualStyleBackColor = true;
+            btnWebcam.Click += btnWebcam_Click;
             // 
             // Main
             // 
@@ -354,5 +366,6 @@
         private Button btnShowDebug;
         private Button btnShowClients;
         private GroupBox gbCommandSending;
+        private Button btnWebcam;
     }
 }
