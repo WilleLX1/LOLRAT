@@ -41,7 +41,6 @@ def send_image(client_socket, image_stream):
 def main(host, port):
     while True:
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
         try:
             # Resolve DNS/domain to IP address
             host_ip = socket.gethostbyname(host)

