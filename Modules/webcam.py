@@ -5,7 +5,7 @@ import sys
 
 # Extract IP and PORT from command line arguments
 if len(sys.argv) != 3:
-    print("Usage: file.py <IP> <PORT>")
+    print('Usage: file.py <IP> <PORT>')
     sys.exit(1)
 
 server_ip = sys.argv[1]
