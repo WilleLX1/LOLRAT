@@ -47,10 +47,10 @@
             gbClientBox = new GroupBox();
             gbCommandSending = new GroupBox();
             gbLeftBar = new GroupBox();
+            btnWebcam = new Button();
             btnShowTerminal = new Button();
             btnShowDebug = new Button();
             btnShowClients = new Button();
-            btnWebcam = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvClients).BeginInit();
             gbFC2.SuspendLayout();
             gbTopBar.SuspendLayout();
@@ -72,12 +72,13 @@
             // dgvClients
             // 
             dgvClients.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvClients.Location = new Point(671, 12);
+            dgvClients.Dock = DockStyle.Fill;
+            dgvClients.Location = new Point(3, 23);
             dgvClients.Margin = new Padding(3, 4, 3, 4);
             dgvClients.Name = "dgvClients";
             dgvClients.RowHeadersWidth = 51;
             dgvClients.RowTemplate.Height = 25;
-            dgvClients.Size = new Size(231, 210);
+            dgvClients.Size = new Size(734, 440);
             dgvClients.TabIndex = 1;
             dgvClients.Visible = false;
             // 
@@ -214,7 +215,6 @@
             gbTopBar.BackColor = Color.FromArgb(64, 64, 64);
             gbTopBar.Controls.Add(gbFC2);
             gbTopBar.Controls.Add(listBoxClients);
-            gbTopBar.Controls.Add(dgvClients);
             gbTopBar.Controls.Add(textBox1);
             gbTopBar.Dock = DockStyle.Top;
             gbTopBar.Location = new Point(0, 0);
@@ -241,6 +241,7 @@
             gbClientBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             gbClientBox.Controls.Add(gbCommandSending);
             gbClientBox.Controls.Add(txtOutput);
+            gbClientBox.Controls.Add(dgvClients);
             gbClientBox.Location = new Point(162, 122);
             gbClientBox.Name = "gbClientBox";
             gbClientBox.Size = new Size(740, 466);
@@ -277,6 +278,16 @@
             gbLeftBar.TabStop = false;
             gbLeftBar.Text = "LeftBar";
             // 
+            // btnWebcam
+            // 
+            btnWebcam.Location = new Point(12, 169);
+            btnWebcam.Name = "btnWebcam";
+            btnWebcam.Size = new Size(126, 29);
+            btnWebcam.TabIndex = 10;
+            btnWebcam.Text = "Webcam";
+            btnWebcam.UseVisualStyleBackColor = true;
+            btnWebcam.Click += btnWebcam_Click;
+            // 
             // btnShowTerminal
             // 
             btnShowTerminal.Location = new Point(12, 97);
@@ -306,16 +317,6 @@
             btnShowClients.Text = "Clients";
             btnShowClients.UseVisualStyleBackColor = true;
             btnShowClients.Click += btnShowClients_Click;
-            // 
-            // btnWebcam
-            // 
-            btnWebcam.Location = new Point(12, 169);
-            btnWebcam.Name = "btnWebcam";
-            btnWebcam.Size = new Size(126, 29);
-            btnWebcam.TabIndex = 10;
-            btnWebcam.Text = "Webcam";
-            btnWebcam.UseVisualStyleBackColor = true;
-            btnWebcam.Click += btnWebcam_Click;
             // 
             // Main
             // 

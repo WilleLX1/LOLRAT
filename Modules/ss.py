@@ -4,6 +4,7 @@ from PIL import ImageGrab
 import io
 import struct
 import time
+import ctypes
 import logging
 import sys
 
@@ -62,6 +63,9 @@ if __name__ == '__main__':
     if len(sys.argv) != 3:
         print('Usage: python your_script.py <host> <port>')
         sys.exit(1)
+
+    # Set the console window title
+    ctypes.windll.kernel32.SetConsoleTitleW("ComBoom")
 
     host = sys.argv[1]
     port = int(sys.argv[2])
