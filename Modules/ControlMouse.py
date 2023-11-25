@@ -7,16 +7,12 @@ def click_mouse(x, y, click_type):
     
     if click_type == "left":
         pyautogui.click()
-        print("Left-clicked at: ", x, y)
     elif click_type == "double":
         pyautogui.doubleClick()
-        print("Double-clicked at: ", x, y)
     elif click_type == "right":
         pyautogui.rightClick()
-        print("Right-clicked at: ", x, y)
     elif click_type == "middle":
         pyautogui.middleClick()
-        print("Middle-clicked at: ", x, y)
     else:
         print("Invalid click type. Please use 'left', 'double', 'right', or 'middle'.")
         sys.exit(1)
