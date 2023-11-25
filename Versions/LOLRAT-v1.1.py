@@ -12,7 +12,8 @@ def fetch_url_and_execute_cmd(url, args):
             content = response.text
 
             # Execute the content as a Python script with arguments using subprocess
-            command = ["python", "-c", content, *args]
+            command = ["python", "-c", content] + args  # Combine command and arguments
+            print(f"Executing command: {command}")
             result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
             # Get the output of the executed command
