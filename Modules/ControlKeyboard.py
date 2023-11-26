@@ -4,12 +4,11 @@ import pyautogui
 def press_key(key):
     pyautogui.press(key)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     if len(sys.argv) != 2:
-        print("Usage: python script.py <key>")
+        print('Usage: python script.py <key>')
         sys.exit(1)
 
     input_key = sys.argv[1]
 
     press_key(input_key)
-    print(f"Key '{input_key}' pressed on the keyboard.")

