@@ -65,7 +65,7 @@ if __name__ == '__main__':
         sys.exit(1)
 
     # Set the console window title
-    ctypes.windll.kernel32.SetConsoleTitleW('ComBoom')
+    # ctypes.windll.kernel32.SetConsoleTitleW('ComBoom')
 
     host = sys.argv[1]
     port = int(sys.argv[2])
