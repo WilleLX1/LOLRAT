@@ -6,7 +6,6 @@ def press_key(key):
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
-        print('Usage: python script.py <key>')
         sys.exit(1)
 
     input_key = sys.argv[1]
