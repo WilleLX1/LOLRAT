@@ -57,7 +57,7 @@ def main(host, port):
             logger.error('Error resolving host: %s', host)
         finally:
             client_socket.close()
-        time.sleep(2)
+        time.sleep(1)
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
@@ -65,7 +65,7 @@ if __name__ == '__main__':
         sys.exit(1)
 
     # Set the console window title
-    ctypes.windll.kernel32.SetConsoleTitleW("ComBoom")
+    ctypes.windll.kernel32.SetConsoleTitleW('ComBoom')
 
     host = sys.argv[1]
     port = int(sys.argv[2])

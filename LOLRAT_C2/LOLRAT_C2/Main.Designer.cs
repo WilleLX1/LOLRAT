@@ -45,6 +45,7 @@
             gbTopBar = new GroupBox();
             textBox1 = new TextBox();
             gbClientBox = new GroupBox();
+            txtOutputDebug = new TextBox();
             gbCommandSending = new GroupBox();
             gbLeftBar = new GroupBox();
             btnWebcam = new Button();
@@ -62,43 +63,40 @@
             // txtOutput
             // 
             txtOutput.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            txtOutput.Location = new Point(6, 21);
-            txtOutput.Margin = new Padding(3, 4, 3, 4);
+            txtOutput.Location = new Point(5, 16);
             txtOutput.Multiline = true;
             txtOutput.Name = "txtOutput";
-            txtOutput.Size = new Size(734, 377);
+            txtOutput.ScrollBars = ScrollBars.Vertical;
+            txtOutput.Size = new Size(643, 284);
             txtOutput.TabIndex = 0;
             // 
             // dgvClients
             // 
             dgvClients.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvClients.Dock = DockStyle.Fill;
-            dgvClients.Location = new Point(3, 23);
-            dgvClients.Margin = new Padding(3, 4, 3, 4);
+            dgvClients.Location = new Point(3, 18);
             dgvClients.Name = "dgvClients";
             dgvClients.RowHeadersWidth = 51;
             dgvClients.RowTemplate.Height = 25;
-            dgvClients.Size = new Size(734, 440);
+            dgvClients.Size = new Size(642, 330);
             dgvClients.TabIndex = 1;
             dgvClients.Visible = false;
             // 
             // txtCommand
             // 
             txtCommand.Dock = DockStyle.Left;
-            txtCommand.Location = new Point(3, 23);
-            txtCommand.Margin = new Padding(3, 4, 3, 4);
+            txtCommand.Location = new Point(3, 18);
             txtCommand.Name = "txtCommand";
-            txtCommand.Size = new Size(503, 27);
+            txtCommand.Size = new Size(441, 23);
             txtCommand.TabIndex = 2;
             txtCommand.Text = "exec$whoami";
             // 
             // btnSend
             // 
             btnSend.Dock = DockStyle.Right;
-            btnSend.Location = new Point(512, 23);
-            btnSend.Margin = new Padding(3, 4, 3, 4);
+            btnSend.Location = new Point(447, 18);
             btnSend.Name = "btnSend";
-            btnSend.Size = new Size(219, 38);
+            btnSend.Size = new Size(192, 28);
             btnSend.TabIndex = 3;
             btnSend.Text = "SEND";
             btnSend.UseVisualStyleBackColor = true;
@@ -106,10 +104,9 @@
             // 
             // btnSS
             // 
-            btnSS.Location = new Point(12, 133);
-            btnSS.Margin = new Padding(3, 4, 3, 4);
+            btnSS.Location = new Point(10, 100);
             btnSS.Name = "btnSS";
-            btnSS.Size = new Size(126, 29);
+            btnSS.Size = new Size(110, 22);
             btnSS.TabIndex = 4;
             btnSS.Text = "Sharescreen";
             btnSS.UseVisualStyleBackColor = true;
@@ -117,10 +114,9 @@
             // 
             // btnListen
             // 
-            btnListen.Location = new Point(12, 440);
-            btnListen.Margin = new Padding(3, 4, 3, 4);
+            btnListen.Location = new Point(10, 330);
             btnListen.Name = "btnListen";
-            btnListen.Size = new Size(126, 31);
+            btnListen.Size = new Size(110, 23);
             btnListen.TabIndex = 5;
             btnListen.Text = "Listen";
             btnListen.UseVisualStyleBackColor = true;
@@ -128,29 +124,26 @@
             // 
             // txtActivePort
             // 
-            txtActivePort.Location = new Point(12, 405);
-            txtActivePort.Margin = new Padding(3, 4, 3, 4);
+            txtActivePort.Location = new Point(10, 304);
             txtActivePort.Name = "txtActivePort";
-            txtActivePort.Size = new Size(126, 27);
+            txtActivePort.Size = new Size(111, 23);
             txtActivePort.TabIndex = 6;
             txtActivePort.Text = "12345";
             // 
             // listBoxClients
             // 
             listBoxClients.FormattingEnabled = true;
-            listBoxClients.ItemHeight = 20;
-            listBoxClients.Location = new Point(503, 17);
-            listBoxClients.Margin = new Padding(3, 4, 3, 4);
+            listBoxClients.ItemHeight = 15;
+            listBoxClients.Location = new Point(440, 13);
             listBoxClients.Name = "listBoxClients";
-            listBoxClients.Size = new Size(137, 124);
+            listBoxClients.Size = new Size(120, 94);
             listBoxClients.TabIndex = 7;
             // 
             // txtFC2IP
             // 
-            txtFC2IP.Location = new Point(7, 29);
-            txtFC2IP.Margin = new Padding(3, 4, 3, 4);
+            txtFC2IP.Location = new Point(6, 22);
             txtFC2IP.Name = "txtFC2IP";
-            txtFC2IP.Size = new Size(114, 27);
+            txtFC2IP.Size = new Size(100, 23);
             txtFC2IP.TabIndex = 8;
             txtFC2IP.Text = "127.0.0.1";
             // 
@@ -161,30 +154,26 @@
             gbFC2.Controls.Add(btnFC2Connect);
             gbFC2.Controls.Add(txtFC2Port);
             gbFC2.Controls.Add(txtFC2IP);
-            gbFC2.Location = new Point(252, 12);
-            gbFC2.Margin = new Padding(3, 4, 3, 4);
+            gbFC2.Location = new Point(220, 9);
             gbFC2.Name = "gbFC2";
-            gbFC2.Padding = new Padding(3, 4, 3, 4);
-            gbFC2.Size = new Size(229, 165);
+            gbFC2.Size = new Size(200, 124);
             gbFC2.TabIndex = 9;
             gbFC2.TabStop = false;
             gbFC2.Text = "FC2";
             // 
             // txtFC2HostPort
             // 
-            txtFC2HostPort.Location = new Point(7, 123);
-            txtFC2HostPort.Margin = new Padding(3, 4, 3, 4);
+            txtFC2HostPort.Location = new Point(6, 92);
             txtFC2HostPort.Name = "txtFC2HostPort";
-            txtFC2HostPort.Size = new Size(114, 27);
+            txtFC2HostPort.Size = new Size(100, 23);
             txtFC2HostPort.TabIndex = 12;
             txtFC2HostPort.Text = "4321";
             // 
             // btnStartFC2
             // 
-            btnStartFC2.Location = new Point(128, 121);
-            btnStartFC2.Margin = new Padding(3, 4, 3, 4);
+            btnStartFC2.Location = new Point(112, 91);
             btnStartFC2.Name = "btnStartFC2";
-            btnStartFC2.Size = new Size(94, 31);
+            btnStartFC2.Size = new Size(82, 23);
             btnStartFC2.TabIndex = 11;
             btnStartFC2.Text = "Start";
             btnStartFC2.UseVisualStyleBackColor = true;
@@ -192,10 +181,9 @@
             // 
             // btnFC2Connect
             // 
-            btnFC2Connect.Location = new Point(128, 43);
-            btnFC2Connect.Margin = new Padding(3, 4, 3, 4);
+            btnFC2Connect.Location = new Point(112, 32);
             btnFC2Connect.Name = "btnFC2Connect";
-            btnFC2Connect.Size = new Size(94, 35);
+            btnFC2Connect.Size = new Size(82, 26);
             btnFC2Connect.TabIndex = 10;
             btnFC2Connect.Text = "Connect";
             btnFC2Connect.UseVisualStyleBackColor = true;
@@ -203,10 +191,9 @@
             // 
             // txtFC2Port
             // 
-            txtFC2Port.Location = new Point(7, 68);
-            txtFC2Port.Margin = new Padding(3, 4, 3, 4);
+            txtFC2Port.Location = new Point(6, 51);
             txtFC2Port.Name = "txtFC2Port";
-            txtFC2Port.Size = new Size(114, 27);
+            txtFC2Port.Size = new Size(100, 23);
             txtFC2Port.TabIndex = 9;
             txtFC2Port.Text = "4321";
             // 
@@ -218,8 +205,10 @@
             gbTopBar.Controls.Add(textBox1);
             gbTopBar.Dock = DockStyle.Top;
             gbTopBar.Location = new Point(0, 0);
+            gbTopBar.Margin = new Padding(3, 2, 3, 2);
             gbTopBar.Name = "gbTopBar";
-            gbTopBar.Size = new Size(920, 116);
+            gbTopBar.Padding = new Padding(3, 2, 3, 2);
+            gbTopBar.Size = new Size(805, 87);
             gbTopBar.TabIndex = 10;
             gbTopBar.TabStop = false;
             gbTopBar.Text = "TopBar";
@@ -230,24 +219,38 @@
             textBox1.BorderStyle = BorderStyle.None;
             textBox1.Font = new Font("Segoe UI", 36F, FontStyle.Regular, GraphicsUnit.Point);
             textBox1.ForeColor = Color.White;
-            textBox1.Location = new Point(12, 12);
+            textBox1.Location = new Point(10, 9);
+            textBox1.Margin = new Padding(3, 2, 3, 2);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(220, 80);
+            textBox1.Size = new Size(192, 64);
             textBox1.TabIndex = 0;
             textBox1.Text = "LOLRAT";
             // 
             // gbClientBox
             // 
             gbClientBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            gbClientBox.Controls.Add(txtOutputDebug);
             gbClientBox.Controls.Add(gbCommandSending);
             gbClientBox.Controls.Add(txtOutput);
             gbClientBox.Controls.Add(dgvClients);
-            gbClientBox.Location = new Point(162, 122);
+            gbClientBox.Location = new Point(142, 92);
+            gbClientBox.Margin = new Padding(3, 2, 3, 2);
             gbClientBox.Name = "gbClientBox";
-            gbClientBox.Size = new Size(740, 466);
+            gbClientBox.Padding = new Padding(3, 2, 3, 2);
+            gbClientBox.Size = new Size(648, 350);
             gbClientBox.TabIndex = 11;
             gbClientBox.TabStop = false;
             gbClientBox.Text = "ClientBox";
+            // 
+            // txtOutputDebug
+            // 
+            txtOutputDebug.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            txtOutputDebug.Location = new Point(0, 15);
+            txtOutputDebug.Multiline = true;
+            txtOutputDebug.Name = "txtOutputDebug";
+            txtOutputDebug.ScrollBars = ScrollBars.Vertical;
+            txtOutputDebug.Size = new Size(643, 284);
+            txtOutputDebug.TabIndex = 5;
             // 
             // gbCommandSending
             // 
@@ -255,9 +258,11 @@
             gbCommandSending.Controls.Add(btnSend);
             gbCommandSending.Controls.Add(txtCommand);
             gbCommandSending.Dock = DockStyle.Bottom;
-            gbCommandSending.Location = new Point(3, 399);
+            gbCommandSending.Location = new Point(3, 300);
+            gbCommandSending.Margin = new Padding(3, 2, 3, 2);
             gbCommandSending.Name = "gbCommandSending";
-            gbCommandSending.Size = new Size(734, 64);
+            gbCommandSending.Padding = new Padding(3, 2, 3, 2);
+            gbCommandSending.Size = new Size(642, 48);
             gbCommandSending.TabIndex = 4;
             gbCommandSending.TabStop = false;
             // 
@@ -271,18 +276,21 @@
             gbLeftBar.Controls.Add(txtActivePort);
             gbLeftBar.Controls.Add(btnListen);
             gbLeftBar.Dock = DockStyle.Left;
-            gbLeftBar.Location = new Point(0, 116);
+            gbLeftBar.Location = new Point(0, 87);
+            gbLeftBar.Margin = new Padding(3, 2, 3, 2);
             gbLeftBar.Name = "gbLeftBar";
-            gbLeftBar.Size = new Size(156, 484);
+            gbLeftBar.Padding = new Padding(3, 2, 3, 2);
+            gbLeftBar.Size = new Size(136, 363);
             gbLeftBar.TabIndex = 10;
             gbLeftBar.TabStop = false;
             gbLeftBar.Text = "LeftBar";
             // 
             // btnWebcam
             // 
-            btnWebcam.Location = new Point(12, 169);
+            btnWebcam.Location = new Point(10, 127);
+            btnWebcam.Margin = new Padding(3, 2, 3, 2);
             btnWebcam.Name = "btnWebcam";
-            btnWebcam.Size = new Size(126, 29);
+            btnWebcam.Size = new Size(110, 22);
             btnWebcam.TabIndex = 10;
             btnWebcam.Text = "Webcam";
             btnWebcam.UseVisualStyleBackColor = true;
@@ -290,9 +298,10 @@
             // 
             // btnShowTerminal
             // 
-            btnShowTerminal.Location = new Point(12, 97);
+            btnShowTerminal.Location = new Point(10, 73);
+            btnShowTerminal.Margin = new Padding(3, 2, 3, 2);
             btnShowTerminal.Name = "btnShowTerminal";
-            btnShowTerminal.Size = new Size(126, 29);
+            btnShowTerminal.Size = new Size(110, 22);
             btnShowTerminal.TabIndex = 9;
             btnShowTerminal.Text = "Terminal";
             btnShowTerminal.UseVisualStyleBackColor = true;
@@ -300,9 +309,10 @@
             // 
             // btnShowDebug
             // 
-            btnShowDebug.Location = new Point(12, 62);
+            btnShowDebug.Location = new Point(10, 46);
+            btnShowDebug.Margin = new Padding(3, 2, 3, 2);
             btnShowDebug.Name = "btnShowDebug";
-            btnShowDebug.Size = new Size(126, 29);
+            btnShowDebug.Size = new Size(110, 22);
             btnShowDebug.TabIndex = 8;
             btnShowDebug.Text = "Debug";
             btnShowDebug.UseVisualStyleBackColor = true;
@@ -310,9 +320,10 @@
             // 
             // btnShowClients
             // 
-            btnShowClients.Location = new Point(12, 27);
+            btnShowClients.Location = new Point(10, 20);
+            btnShowClients.Margin = new Padding(3, 2, 3, 2);
             btnShowClients.Name = "btnShowClients";
-            btnShowClients.Size = new Size(126, 29);
+            btnShowClients.Size = new Size(110, 22);
             btnShowClients.TabIndex = 7;
             btnShowClients.Text = "Clients";
             btnShowClients.UseVisualStyleBackColor = true;
@@ -320,13 +331,12 @@
             // 
             // Main
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(920, 600);
+            ClientSize = new Size(805, 450);
             Controls.Add(gbLeftBar);
             Controls.Add(gbClientBox);
             Controls.Add(gbTopBar);
-            Margin = new Padding(3, 4, 3, 4);
             Name = "Main";
             Text = "Main";
             ((System.ComponentModel.ISupportInitialize)dgvClients).EndInit();
@@ -368,5 +378,6 @@
         private Button btnShowClients;
         private GroupBox gbCommandSending;
         private Button btnWebcam;
+        private TextBox txtOutputDebug;
     }
 }
