@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Github\\LOLRAT\\LOLRAT_C2\\LOLRAT_C2\\LOLRAT_C2.csproj": {}
+    "C:\\Github-Stuff\\Python\\LOLRAT\\LOLRAT\\LOLRAT_C2\\LOLRAT_C2\\LOLRAT_C2.csproj": {}
   },
   "projects": {
-    "D:\\Github\\LOLRAT\\LOLRAT_C2\\LOLRAT_C2\\LOLRAT_C2.csproj": {
+    "C:\\Github-Stuff\\Python\\LOLRAT\\LOLRAT\\LOLRAT_C2\\LOLRAT_C2\\LOLRAT_C2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Github\\LOLRAT\\LOLRAT_C2\\LOLRAT_C2\\LOLRAT_C2.csproj",
+        "projectUniqueName": "C:\\Github-Stuff\\Python\\LOLRAT\\LOLRAT\\LOLRAT_C2\\LOLRAT_C2\\LOLRAT_C2.csproj",
         "projectName": "LOLRAT_C2",
-        "projectPath": "D:\\Github\\LOLRAT\\LOLRAT_C2\\LOLRAT_C2\\LOLRAT_C2.csproj",
-        "packagesPath": "C:\\Users\\Sofie\\.nuget\\packages\\",
-        "outputPath": "D:\\Github\\LOLRAT\\LOLRAT_C2\\LOLRAT_C2\\obj\\",
+        "projectPath": "C:\\Github-Stuff\\Python\\LOLRAT\\LOLRAT\\LOLRAT_C2\\LOLRAT_C2\\LOLRAT_C2.csproj",
+        "packagesPath": "C:\\Users\\william.danielsson\\.nuget\\packages\\",
+        "outputPath": "C:\\Github-Stuff\\Python\\LOLRAT\\LOLRAT\\LOLRAT_C2\\LOLRAT_C2\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Sofie\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\william.danielsson\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -63,7 +63,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
         }
       }
     }

