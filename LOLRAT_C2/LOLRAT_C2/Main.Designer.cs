@@ -48,10 +48,12 @@
             txtOutputDebug = new TextBox();
             gbCommandSending = new GroupBox();
             gbLeftBar = new GroupBox();
+            btnSaveClient = new Button();
             btnWebcam = new Button();
             btnShowTerminal = new Button();
             btnShowDebug = new Button();
             btnShowClients = new Button();
+            btnLoadClient = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvClients).BeginInit();
             gbFC2.SuspendLayout();
             gbTopBar.SuspendLayout();
@@ -268,6 +270,8 @@
             // 
             // gbLeftBar
             // 
+            gbLeftBar.Controls.Add(btnLoadClient);
+            gbLeftBar.Controls.Add(btnSaveClient);
             gbLeftBar.Controls.Add(btnWebcam);
             gbLeftBar.Controls.Add(btnShowTerminal);
             gbLeftBar.Controls.Add(btnShowDebug);
@@ -284,6 +288,16 @@
             gbLeftBar.TabIndex = 10;
             gbLeftBar.TabStop = false;
             gbLeftBar.Text = "LeftBar";
+            // 
+            // btnSaveClient
+            // 
+            btnSaveClient.Location = new Point(10, 154);
+            btnSaveClient.Name = "btnSaveClient";
+            btnSaveClient.Size = new Size(108, 22);
+            btnSaveClient.TabIndex = 6;
+            btnSaveClient.Text = "Save";
+            btnSaveClient.UseVisualStyleBackColor = true;
+            btnSaveClient.Click += btnSaveClient_Click;
             // 
             // btnWebcam
             // 
@@ -328,6 +342,16 @@
             btnShowClients.Text = "Clients";
             btnShowClients.UseVisualStyleBackColor = true;
             btnShowClients.Click += btnShowClients_Click;
+            // 
+            // btnLoadClient
+            // 
+            btnLoadClient.Location = new Point(10, 182);
+            btnLoadClient.Name = "btnLoadClient";
+            btnLoadClient.Size = new Size(108, 22);
+            btnLoadClient.TabIndex = 11;
+            btnLoadClient.Text = "Load";
+            btnLoadClient.UseVisualStyleBackColor = true;
+            btnLoadClient.Click += btnLoadClient_Click;
             // 
             // Main
             // 
@@ -379,5 +403,7 @@
         private GroupBox gbCommandSending;
         private Button btnWebcam;
         private TextBox txtOutputDebug;
+        private Button btnSaveClient;
+        private Button btnLoadClient;
     }
 }
