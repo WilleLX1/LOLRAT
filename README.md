@@ -16,6 +16,11 @@ The primary goal of this project is to create a remote access tool that operates
 
 - **Modular Execution:** LOLRAT divides its functionality into separate modules to prevent code size from exceeding the maximum character limit in Windows Command Prompt (8191 characters). Each module is designed to be small and efficient, facilitating ease of use and customization.
 
+## How It Works
+
+1. Executes python script in memory (using "python -c "Content-Here"") that connects to C2.
+2. 
+
 ## Getting Started
 
 To get started with LOLRAT, follow these steps:
