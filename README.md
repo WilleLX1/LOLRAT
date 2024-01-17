@@ -19,18 +19,17 @@ The primary goal of this project is to create a remote access tool that operates
 ## How It Works
 
 1. Executes python script in memory (using "python -c "Content-Here"") that connects to C2.
-2. 
+2. When connected to C2 then it will wait for commands and execute
+3. Typically a command would look like this `exec:whoami` that executes and gets output from the whoami command.
 
 ## Getting Started
 
 To get started with LOLRAT, follow these steps:
 
 1. Clone this repository to your local machine.
-2. Customize and configure the LOLRAT modules to meet your specific needs.
-3. Establish a secure Command and Control (C2) server for communication with the LOLRAT client.
-4. Compile and encrypt your customized modules.
-5. Deploy the client on the target system.
-6. Begin communicating with the client through the C2 server.
+2. Compile and encrypt your payload with payload builder.
+3. Deploy the client on the target system.
+4. Begin communicating with the client through the C2 server.
 
 **Please use LOLRAT responsibly and only for legitimate, authorized purposes. Unauthorized use or any malicious activities are strictly prohibited and may have legal consequences.**
 
